@@ -101,7 +101,6 @@ Explainability and feature importance
 Recommended explainability steps used or suggested by the notebooks:
 
 - Feature importances (from tree-based models) — quick global explanation.
-- SHAP values (if computed): provide local and global explanations and are model-agnostic in interpretation. SHAP can be computationally expensive on large datasets.
 - Partial dependence plots: visualize marginal effect of a feature on predicted outcome.
 
 Reproducibility notes
@@ -113,7 +112,7 @@ Reproducibility notes
 Performance and runtime
 -----------------------
 - Models like RandomForest and XGBoost scale roughly linearly with number of trees and data size.
-- SHAP (TreeExplainer) and repeated cross-validation can be the slowest steps. For fast iteration, reduce `n_folds`, `n_estimators`, or sample down the data during development.
+- For fast iteration, reduce `n_folds`, `n_estimators`, or sample down the data during development.
 
 How to run locally (recommended)
 --------------------------------
@@ -128,7 +127,7 @@ python -m pip install --upgrade pip
 2. Install dependencies (example):
 
 ```bash
-pip install pandas numpy scikit-learn xgboost shap matplotlib seaborn jupyterlab
+pip install pandas numpy scikit-learn xgboost matplotlib seaborn jupyterlab
 ```
 
 3. Place `merged_nhanes_readable(1).csv` in this repository folder.
@@ -145,23 +144,5 @@ Troubleshooting
 ---------------
 - Missing package errors: install the missing package via pip (or add to `requirements.txt`).
 - Out of memory: reduce dataset size, reduce number of trees (`n_estimators`), or run on a machine with more RAM.
-- Extremely slow SHAP computations: compute SHAP on a smaller sample or use `nsamples` argument to limit computations.
 - Unexpected results after edits: restart kernel and run all cells from top to bottom to ensure a clean state.
 
-Recommended extensions & artifacts to add (next steps)
-----------------------------------------------------
-- `requirements.txt`: pin package versions for reproducibility.
-- `sample_schema.json` or `sample_row.csv`: small sample of the dataset and expected column names to make onboarding faster.
-- Parameter sweep notebook / script: hyperparameter tuning and search with an experiment tracker (MLflow or Weights & Biases).
-- Unit tests for small preprocessing functions.
-- Exported CSVs for `risk_scores_df` and `metrics_df` to keep a record of results for each `TOP_N_FEATURES` setting.
-
-Contact / further help
-----------------------
-If you want:
-- I can add a `requirements.txt` generated from your environment.
-- I can add a quick non-destructive cell that validates dataset schema and prints a small summary (no code changes to existing analysis cells).
-- I can help instrument the notebooks to save outputs (`metrics_df`, `risk_scores_df`) automatically to CSV files after runs.
-
----
-This README aims to be a single-source reference for the notebooks and the ML pipeline. If you want additional sections (example outputs, column-by-column data dictionary, or automated run scripts), tell me which and I will add them.
