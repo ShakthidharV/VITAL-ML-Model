@@ -67,8 +67,8 @@ Typical hyperparameters (inspect the notebooks for exact values):
 
 Training protocol
 -----------------
-- Cross-validation: k-fold or stratified k-fold (commonly k=5). The notebooks compute metrics across folds and report mean ± std.
-- For each fold: train the model on training fold, evaluate on validation fold, save predicted probabilities for the hold-out fold to compute aggregated risk scores.
+- Dataset was randomly split into 80% training and 20% testing sets. (Only rows with valid binary target values (0/1) were used for training and testing; records with non-informative codes (e.g., 3 – “Rather not say”, 7 – “Don’t know”, 9 – “NaN”) were excluded during preprocessing.)
+- Stratified sampling ensured balanced class distribution across disease categories.Cross-validation: k-fold or stratified k-fold (commonly k=5). The notebooks compute metrics across folds and report mean ± std.
 - For multi-target experiments (several diseases), models are trained independently per target and results aggregated.
 
 Evaluation metrics and how to interpret them
