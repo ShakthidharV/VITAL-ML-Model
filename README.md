@@ -16,7 +16,7 @@ The notebooks implement a reproducible pipeline to:
 - Train and evaluate a small collection of classifiers on multiple disease outcomes.
 - Produce per-sample risk scores (predicted probabilities) and aggregate performance summaries.
 
-The main motivations are model parsimony (fewer features = easier clinical adoption), robust evaluation (cross-validation) and explainability (feature importance, SHAP where used).
+The main motivations are model parsimony (fewer features = easier clinical adoption), robust evaluation (cross-validation) and explainability.
 
 Dataset assumptions and recommended schema
 ----------------------------------------
@@ -34,7 +34,7 @@ Preprocessing steps (what the notebooks do / what to check)
 The notebooks follow these general preprocessing steps (check the code cells for exact implementation details):
 
 1. Read CSV into pandas DataFrame `df` and optional filtered version `df_filtered`.
-2. Drop or flag columns with very high missingness (threshold depends on implementation).
+2. Drop or flag columns with very high missingness (threshold depends on implementation). Biologically informed curation was applied to remove redundant or disease-irrelevant columns, ensuring that only clinically meaningful variables were retained for efficient data handling and biologically grounded model training.
 3. Handle missing values: the notebooks may impute or drop rows/columns — inspect the code. Typical strategies:
 	- Numeric: median imputation or simple mean.
 	- Categorical: mode imputation or adding an explicit "missing" category.
@@ -44,10 +44,12 @@ The notebooks follow these general preprocessing steps (check the code cells for
 
 Feature ranking and selection
 ---------------------------
-The notebooks select a small number of top features per-target. Typical strategies implemented or commonly used in similar pipelines are:
+Each notebook selects a small subset of the most significant features for every target disease. For each disease, a predefined set of clinically relevant features is provided to the model beforehand. The model then performs automated feature selection to identify additional variables, resulting in a final set of 8, 11, or 15 features — those most important and biologically relevant for training and optimizing the predictive model. Typical strategies implemented or commonly used in similar pipelines are:
 
 - Univariate scoring (e.g., correlation with the binary target, mutual information): quick and interpretable.
 - Tree-based feature importance (RandomForest / XGBoost): captures non-linear relationships and feature interactions.
+
+In this model, a Hybrid selection strategy — combining correlation filtering and Random Forest importance was implemented to efficiently capture both linear and non-linear relationships within the data. The correlation step effectively removed redundant or weakly associated variables, while the Random Forest step identified features with the strongest predictive influence on disease outcomes. Together, they yielded a more stable, interpretable, and biologically relevant feature set for model training.
 
 In these notebooks the selected method is implemented in code (check the selection cell). The only deliberate difference among the three notebooks is the value of `TOP_N_FEATURES` (8, 11, or 15).
 
@@ -64,6 +66,8 @@ Typical hyperparameters (inspect the notebooks for exact values):
 - RandomForest: n_estimators (e.g., 100 or 200), max_depth (optional), random_state set to `RANDOM_STATE`.
 - XGBoost: use default boosters with tuned learning_rate, n_estimators, max_depth; `random_state` seeded.
 - LogisticRegression: use `solver='lbfgs'` or `saga` with `max_iter` increased if needed; consider class_weight='balanced' for imbalanced data.
+
+Upon comparing the performance of the three classifiers, XGBoost consistently produced the most reliable results. While the Random Forest model showed comparatively weaker performance across metrics, Logistic Regression achieved a similar ROC–AUC value to XGBoost. However, XGBoost was ultimately selected for its ability to capture non-linear relationships, model complex feature interactions, handle class imbalance, and apply strong regularization to prevent overfitting. These properties make the XGBoost-based model more robust, interpretable, and biologically meaningful for disease classification and risk score computation.
 
 Training protocol
 -----------------
