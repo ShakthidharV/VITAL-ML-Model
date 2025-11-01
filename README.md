@@ -48,7 +48,6 @@ The notebooks select a small number of top features per-target. Typical strategi
 
 - Univariate scoring (e.g., correlation with the binary target, mutual information): quick and interpretable.
 - Tree-based feature importance (RandomForest / XGBoost): captures non-linear relationships and feature interactions.
-- Recursive feature elimination / embedded methods: iteratively remove least important features.
 
 In these notebooks the selected method is implemented in code (check the selection cell). The only deliberate difference among the three notebooks is the value of `TOP_N_FEATURES` (8, 11, or 15).
 
@@ -80,8 +79,6 @@ Key metrics used in the notebooks:
 - Accuracy: proportion of correct predictions. Use with caution under class imbalance.
 - Precision, Recall, F1-score: use when classes are imbalanced or when false positives/false negatives have different costs.
 - Confusion matrix: raw counts of TP, FP, TN, FN 
-- Calibration (reliability plots / Brier score): assesses whether predicted probabilities reflect true outcome frequencies.
-- Cross-validation mean ± std: provides an estimate of model performance variability.
 
 Choice of threshold for binary predictions
 -----------------------------------------
